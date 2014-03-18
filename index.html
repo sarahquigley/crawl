@@ -99,6 +99,7 @@
 
       killPlayer: function(player, baddy){
         player.kill();
+        game.state.start('Over');
       }
 
     };
@@ -106,6 +107,17 @@
     Game.Over = function(game){};
 
     Game.Over.prototype = {
+      create: function(){
+        this.overText = game.add.text(200, 200, "game over\n press UP to restart", { font: "20px arial", fill: "#fff" });
+        this.cursors = game.input.keyboard.createCursorKeys();
+        this.time = this.game.time.now + 1000;
+      },
+
+      update: function(){
+        if (this.game.time.now > this.time && this.cursors.up.isDown) {
+        game.state.start('Play');
+        }
+      }
     };
 
     var game = new Phaser.Game(400, 400, Phaser.AUTO, '');
