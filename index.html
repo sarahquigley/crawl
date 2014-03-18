@@ -7,76 +7,102 @@
   </head>
 
   <script type="text/javascript">
-    var game = new Phaser.Game(400, 400, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    Game = {};
 
-    var player, baddies, cursors, score, scoreText;
+    Game.Load = function(game){};
 
-    function preload(){
-      game.load.image('star', 'assets/star.png');
-      game.load.image('mushroom', 'assets/mushroom.png');
-    }
+    Game.Load.prototype = {
+      
+    };
 
-    function create(){
-      // Player
-      player = game.add.sprite((game.world.width / 2) - 12, (game.world.height / 2) - 11, 'star');
-      game.physics.enable(player, Phaser.Physics.ARCADE);
-      player.body.collideWorldBounds = true;
+    Game.Play = function(game){};
 
-      // Baddies
-      baddies = game.add.group();
+    Game.Play.prototype = {
 
-      // Add one baddy every second
-      game.time.events.loop(Phaser.Timer.SECOND * 0.5, function(i){
-          var startX, startY, angle;
-          if (_.random(0, 1) === 0) {
+      preload: function(){
+        game.load.image('star', 'assets/star.png');
+        game.load.image('mushroom', 'assets/mushroom.png');
+      },
+
+      create: function(){
+        // Player
+        this.player = game.add.sprite((game.world.width / 2) - 12, (game.world.height / 2) - 11, 'star');
+        game.physics.enable(this.player, Phaser.Physics.ARCADE);
+        this.player.body.collideWorldBounds = true;
+
+        // Baddies
+        this.baddies = game.add.group();
+
+        // Add one baddy every second
+        game.time.events.loop(Phaser.Timer.SECOND * 0.5, function(){
+            var startX, startY, angle;
+            if (_.random(0, 1) === 0) {
             startX = _.random(0, 400);
             startY = _.random(0, 1) === 0 ? -25 : 425;
-          } else {
+            } else {
             startY = _.random(0, 400);
             startX = _.random(0, 1) === 0 ? -26 : 426;
-          }
+            }
 
-          if (startX <= 200 && startY <= 200) {
+            if (startX <= 200 && startY <= 200) {
             angle = _.random(20, 70);
-          } else if ( startX > 200 && startY <= 200 ) {
+            } else if ( startX > 200 && startY <= 200 ) {
             angle = _.random(110, 160);
-          } else if ( startX > 200 && startY >= 200 ) {
+            } else if ( startX > 200 && startY >= 200 ) {
             angle = _.random(200, 250);
-          } else {
+            } else {
             angle = _.random(290, 340);
-          }
+            }
 
-          var baddy = baddies.create(startX, startY, 'mushroom');
-          game.physics.enable(baddy, Phaser.Physics.ARCADE);
-          game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
-      }, this);
+            var baddy = this.baddies.create(startX, startY, 'mushroom');
+            game.physics.enable(baddy, Phaser.Physics.ARCADE);
+            game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
+        }, this);
 
-      // Cursors
-      cursors = game.input.keyboard.createCursorKeys();
-    }
+        // Cursors
+        this.cursors = game.input.keyboard.createCursorKeys();
 
-    function update(){
-      game.physics.arcade.overlap(player, baddies, killPlayer, null, this);
+        // Scoretext
+        this.score = 0;
+        this.scoreText = game.add.text(15, 10, this.score, {font: '20px arial', fill: '#fff'});
+      },
 
-      // Player
-      player.body.velocity.x = 0;
-      player.body.velocity.y = 0;
+      update: function(){
+        game.physics.arcade.overlap(this.player, this.baddies, this.killPlayer, null, this);
 
-      // Add cursor control of player
-      if (cursors.left.isDown) {
-        player.body.velocity.x = -150;
-      } else if (cursors.right.isDown){
-        player.body.velocity.x = 150;
-      } else if (cursors.up.isDown){
-        player.body.velocity.y = -150;
-      } else if (cursors.down.isDown){
-        player.body.velocity.y = 150;
+        // Player
+        this.player.body.velocity.x = 0;
+        this.player.body.velocity.y = 0;
+
+        // Add cursor control of player
+        if (this.cursors.left.isDown) {
+          this.player.body.velocity.x = -150;
+        } else if (this.cursors.right.isDown){
+          this.player.body.velocity.x = 150;
+        } else if (this.cursors.up.isDown){
+          this.player.body.velocity.y = -150;
+        } else if (this.cursors.down.isDown){
+          this.player.body.velocity.y = 150;
+        }
+      },
+
+      killPlayer: function(player, baddy){
+        player.kill();
       }
-    }
 
-    function killPlayer(player, baddy){
-      player.kill();
-    }
+    };
+
+    Game.Over = function(game){};
+
+    Game.Over.prototype = {
+    };
+
+    var game = new Phaser.Game(400, 400, Phaser.AUTO, '');
+
+    game.state.add('Load', Game.Load);
+    game.state.add('Play', Game.Play);
+    game.state.app('Over', Game.Over);
+    game.state.start('Play');
 
   </script>
 
