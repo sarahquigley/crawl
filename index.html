@@ -27,10 +27,14 @@
       // Baddies
       baddies = game.add.group();
 
-      _.times(2, function(i){
-        var baddy = baddies.create(i * 50, 0, 'mushroom');
+      game.time.events.loop(Phaser.Timer.SECOND * 2, function(i){
+        var startX = Math.round(Math.random()*400);
+        var startY = -25;
+        var baddy = baddies.create(startX, startY, 'mushroom');
         game.physics.enable(baddy, Phaser.Physics.ARCADE);
-      });
+        baddy.body.velocity.x = Math.round(Math.random()*100);
+        baddy.body.velocity.y = 100 - baddy.body.velocity.x;
+      }, this);
 
       cursors = game.input.keyboard.createCursorKeys();
     }
