@@ -115,6 +115,7 @@
 
       killPlayer: function(player, baddy){
         player.kill();
+        game.score = this.score;
         game.state.start('Over');
       }
 
@@ -124,7 +125,7 @@
 
     Game.Over.prototype = {
       create: function(){
-        this.text = game.add.text(game.world.centerX, game.world.centerY, "game over\npress UP to restart", { font: "20px arial", fill: "#fff" });
+        this.text = game.add.text(game.world.centerX, game.world.centerY, "game over\nscore: " + game.score + "\npress UP to restart", { font: "20px arial", fill: "#fff" });
         this.text.anchor.setTo(0.5);
         this.cursors = game.input.keyboard.createCursorKeys();
         this.time = this.game.time.now + 1000;
