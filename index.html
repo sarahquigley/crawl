@@ -19,7 +19,8 @@
       },
 
       create: function(){
-        this.loadText = game.add.text(200, 200, "move with arrow keys\n press UP to begin", { font: "20px arial", fill: "#fff" });
+        this.text = game.add.text(game.world.centerX, game.world.centerY, "move with arrow keys\npress UP to begin", { font: "20px arial", fill: "#fff" });
+        this.text.anchor.setTo(0.5);
         this.cursors = game.input.keyboard.createCursorKeys();
         this.time = this.game.time.now + 1000;
       },
@@ -43,39 +44,16 @@
 
         // Baddies
         this.baddies = game.add.group();
-
-        // Add one baddy every second
-        game.time.events.loop(Phaser.Timer.SECOND * 0.5, function(){
-            var startX, startY, angle;
-            if (_.random(0, 1) === 0) {
-            startX = _.random(0, 400);
-            startY = _.random(0, 1) === 0 ? -25 : 425;
-            } else {
-            startY = _.random(0, 400);
-            startX = _.random(0, 1) === 0 ? -26 : 426;
-            }
-
-            if (startX <= 200 && startY <= 200) {
-            angle = _.random(20, 70);
-            } else if ( startX > 200 && startY <= 200 ) {
-            angle = _.random(110, 160);
-            } else if ( startX > 200 && startY >= 200 ) {
-            angle = _.random(200, 250);
-            } else {
-            angle = _.random(290, 340);
-            }
-
-            var baddy = this.baddies.create(startX, startY, 'mushroom');
-            game.physics.enable(baddy, Phaser.Physics.ARCADE);
-            game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
-        }, this);
+        this.baddies.setAll('outOfBoundsKill', true);
+        this.nextBaddyTime = game.time.now;
 
         // Cursors
         this.cursors = game.input.keyboard.createCursorKeys();
 
         // Scoretext
         this.score = 0;
-        this.scoreText = game.add.text(15, 10, this.score, {font: '20px arial', fill: '#fff'});
+        this.nextScoringTime = game.time.now;
+        this.scoreText = game.add.text(15, 10, this.score.toString(), {font: '20px arial', fill: '#fff'});
       },
 
       update: function(){
@@ -95,6 +73,44 @@
         } else if (this.cursors.down.isDown){
           this.player.body.velocity.y = 150;
         }
+
+        // Spawn baddies
+        if(game.time.now >= this.nextBaddyTime){
+          this.nextBaddyTime += 500;
+          this.newBaddy();
+        }
+
+        // Increase score
+        if(game.time.now >= this.nextScoringTime){
+          this.nextScoringTime += 1000;
+          this.score += 1;
+          this.scoreText.text = this.score.toString();
+        }
+      },
+
+      newBaddy: function(){
+        var startX, startY, angle;
+        if (_.random(0, 1) === 0) {
+        startX = game.world.randomX;
+        startY = _.random(0, 1) === 0 ? -25 : 425;
+        } else {
+        startY = game.world.randomY;
+        startX = _.random(0, 1) === 0 ? -26 : 426;
+        }
+
+        if (startX <= 200 && startY <= 200) {
+        angle = _.random(20, 70);
+        } else if ( startX > 200 && startY <= 200 ) {
+        angle = _.random(110, 160);
+        } else if ( startX > 200 && startY >= 200 ) {
+        angle = _.random(200, 250);
+        } else {
+        angle = _.random(290, 340);
+        }
+
+        var baddy = this.baddies.create(startX, startY, 'mushroom');
+        game.physics.enable(baddy, Phaser.Physics.ARCADE);
+        game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
       },
 
       killPlayer: function(player, baddy){
@@ -108,7 +124,8 @@
 
     Game.Over.prototype = {
       create: function(){
-        this.overText = game.add.text(200, 200, "game over\n press UP to restart", { font: "20px arial", fill: "#fff" });
+        this.text = game.add.text(game.world.centerX, game.world.centerY, "game over\npress UP to restart", { font: "20px arial", fill: "#fff" });
+        this.text.anchor.setTo(0.5);
         this.cursors = game.input.keyboard.createCursorKeys();
         this.time = this.game.time.now + 1000;
       },
