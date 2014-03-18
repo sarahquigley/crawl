@@ -13,16 +13,27 @@
 
     Game.Load.prototype = {
       
+      preload: function(){
+        game.load.image('star', 'assets/star.png');
+        game.load.image('mushroom', 'assets/mushroom.png');
+      },
+
+      create: function(){
+        this.loadText = game.add.text(200, 200, "move with arrow keys\n press UP to begin", { font: "20px arial", fill: "#fff" });
+        this.cursors = game.input.keyboard.createCursorKeys();
+        this.time = this.game.time.now + 1000;
+      },
+
+      update: function(){
+        if (this.game.time.now > this.time && this.cursors.up.isDown) {
+        game.state.start('Play');
+        }
+      }
     };
 
     Game.Play = function(game){};
 
     Game.Play.prototype = {
-
-      preload: function(){
-        game.load.image('star', 'assets/star.png');
-        game.load.image('mushroom', 'assets/mushroom.png');
-      },
 
       create: function(){
         // Player
@@ -101,8 +112,8 @@
 
     game.state.add('Load', Game.Load);
     game.state.add('Play', Game.Play);
-    game.state.app('Over', Game.Over);
-    game.state.start('Play');
+    game.state.add('Over', Game.Over);
+    game.state.start('Load');
 
   </script>
 
