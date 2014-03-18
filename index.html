@@ -27,13 +27,31 @@
       // Baddies
       baddies = game.add.group();
 
-      game.time.events.loop(Phaser.Timer.SECOND * 2, function(i){
-        var startX = Math.round(Math.random()*400);
-        var startY = -25;
-        var baddy = baddies.create(startX, startY, 'mushroom');
-        game.physics.enable(baddy, Phaser.Physics.ARCADE);
-        baddy.body.velocity.x = Math.round(Math.random()*100);
-        baddy.body.velocity.y = 100 - baddy.body.velocity.x;
+      game.time.events.loop(Phaser.Timer.SECOND * 0.25, function(i){
+          if(_.random(0, 1) === 0){
+            var startX = _.random(0, 400);
+            if(_.random(0, 1) === 0){
+              var startY = -25;
+            } else {
+              var startY = 425;  
+            }
+            var velX = startX > 200 ? _.random(-150, -50) : _.random(50, 150);
+            var velY = startY > 0 ? -150 + Math.abs(velX) : 150 - Math.abs(velX);
+          } else {
+            var startY = _.random(0, 400);
+            if(_.random(0, 1) === 0){
+              var startX = -26;
+            } else {
+              var startX = 426;  
+            }
+            var velY = startY > 200 ? _.random(-150, -50) : _.random(50, 150);
+            var velX = startX > 0 ? -150 + Math.abs(velY) : 150 - Math.abs(velY);
+          }
+
+          var baddy = baddies.create(startX, startY, 'mushroom');
+          game.physics.enable(baddy, Phaser.Physics.ARCADE);
+          baddy.body.velocity.x = velX;
+          baddy.body.velocity.y = velY;
       }, this);
 
       cursors = game.input.keyboard.createCursorKeys();
