@@ -4,6 +4,14 @@
   <head>
     <script type="text/javascript" src="js/lib/underscore-min.js"></script>
     <script type="text/javascript" src="js/lib/phaser.min.js"></script>
+
+    <style>
+      #content{
+        margin: auto;
+        text-align: center;
+        width: 400px;
+      }
+    </style>
   </head>
 
   <script type="text/javascript">
@@ -138,7 +146,7 @@
       }
     };
 
-    var game = new Phaser.Game(400, 400, Phaser.AUTO, '');
+    var game = new Phaser.Game(400, 400, Phaser.AUTO, 'game');
 
     game.state.add('Load', Game.Load);
     game.state.add('Play', Game.Play);
@@ -148,7 +156,17 @@
   </script>
 
   <body>
+
+    <div id="content">
+
+      <h1>Run</h1>
+
+      <div id="game"></div>
+
+    </div>
+
   </body>
+
 </html>
 
 
