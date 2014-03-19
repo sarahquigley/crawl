@@ -7,3 +7,10 @@ To develop a game in Phaser, you must run a local server. As something of a Ruby
     ruby -run -e httpd . -p 9090
 
 Your current directory will now be served from port 9090.
+
+## Best Phaser resources
+
+1. Phaser examples
+    http://examples.phaser.io/index.html
+2. Phaser docs
+    http://docs.phaser.io/index.html
