@@ -22,8 +22,9 @@
     Game.Load.prototype = {
       
       preload: function(){
-        game.load.image('star', 'assets/star.png');
-        game.load.image('mushroom', 'assets/mushroom.png');
+        game.load.image('player', 'assets/ladybug-shadow-60.png');
+        game.load.spritesheet('baddy', 'assets/ant-spritesheet-shadow-30.png', 32, 30);
+        game.load.image('background', 'assets/background.jpg');
       },
 
       create: function(){
@@ -45,10 +46,13 @@
     Game.Play.prototype = {
 
       create: function(){
+        this.background = game.add.tileSprite(0, 0, 400, 400, 'background');
+
         // Player
-        this.player = game.add.sprite((game.world.width / 2) - 12, (game.world.height / 2) - 11, 'star');
+        this.player = game.add.sprite((game.world.width / 2) - 12, (game.world.height / 2) - 11, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
         this.player.body.collideWorldBounds = true;
+        this.player.body.setSize(50, 38, -5, -5);  
 
         // Baddies
         this.baddies = game.add.group();
@@ -116,7 +120,9 @@
         angle = _.random(290, 340);
         }
 
-        var baddy = this.baddies.create(startX, startY, 'mushroom');
+        var baddy = this.baddies.create(startX, startY, 'baddy');
+        baddy.animations.add('move', [0, 1, 2], 10, true);
+        baddy.animations.play('move');
         game.physics.enable(baddy, Phaser.Physics.ARCADE);
         game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
       },
