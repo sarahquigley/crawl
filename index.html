@@ -52,7 +52,7 @@
         this.player = game.add.sprite((game.world.width / 2) - 12, (game.world.height / 2) - 11, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
         this.player.body.collideWorldBounds = true;
-        this.player.body.setSize(50, 38, -5, -5);  
+        //this.player.body.setSize(50, 38, -5, -5);  
 
         // Baddies
         this.baddies = game.add.group();
@@ -74,16 +74,20 @@
         // Player
         this.player.body.velocity.x = 0;
         this.player.body.velocity.y = 0;
+        this.player.body.angularVelocity = 0;
 
-        // Add cursor control of player
-        if (this.cursors.left.isDown) {
-          this.player.body.velocity.x = -150;
-        } else if (this.cursors.right.isDown){
-          this.player.body.velocity.x = 150;
-        } else if (this.cursors.up.isDown){
-          this.player.body.velocity.y = -150;
-        } else if (this.cursors.down.isDown){
-          this.player.body.velocity.y = 150;
+        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+          this.player.body.angularVelocity = -200;
+        } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+          this.player.body.angularVelocity = 200;
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+          game.physics.arcade.velocityFromAngle(this.player.angle, 300, this.player.body.velocity);
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+          game.physics.arcade.velocityFromAngle(this.player.angle, -300, this.player.body.velocity);
         }
 
         // Spawn baddies
@@ -121,9 +125,11 @@
         }
 
         var baddy = this.baddies.create(startX, startY, 'baddy');
+        game.physics.enable(baddy, Phaser.Physics.ARCADE);
+        baddy.body.rotation = angle;
+        //this.player.body.setSize(50, 38, -5, -5);  
         baddy.animations.add('move', [0, 1, 2], 10, true);
         baddy.animations.play('move');
-        game.physics.enable(baddy, Phaser.Physics.ARCADE);
         game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
       },
 
