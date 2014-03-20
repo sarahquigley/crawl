@@ -6,10 +6,45 @@
     <script type="text/javascript" src="js/lib/phaser.min.js"></script>
 
     <style>
+      *{
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      body{
+        background: black;
+      }
+
+      h1{
+        font: 90px 'Faster One';
+        color: #FFDC00;
+      }
+
+      h2, p{
+        font-weight: normal;
+        font-family: Audiowide, sans-serif;
+        color: white;
+      }
+
+      a{
+        color: #FFDC00;
+        text-decoration: none;
+      }
+
+      a:hover{
+        text-decoration: underline;
+      }
+      
       #content{
-        margin: auto;
+        margin: 120px auto;
         text-align: center;
         width: 400px;
+      }
+
+      #game canvas{
+        border-radius: 10px;
+        margin-bottom: 50px;
       }
     </style>
   </head>
@@ -223,9 +258,11 @@
 
     <div id="content">
 
-      <h1>Run</h1>
-
       <div id="game"></div>
+
+      <h2>A game by <a href="http://sarahquigley.net">Sarah Quigley</a></h2>
+      <p>Built in awesome 2-D Javascript gaming framework, <a href="http://phaser.io">Phaser</a>.</p>
+      <p>Heavily inspired by Thomas Palef's <a href="http://www.lessmilk.com/1/">Run</a>.</p>
 
     </div>
 
