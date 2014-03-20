@@ -18,3 +18,5 @@ Your current directory will now be served from port 9090.
     http://examples.phaser.io/index.html
 2. Phaser docs
     http://docs.phaser.io/index.html
+3. Phaser wiki
+    https://github.com/photonstorm/phaser/wiki/_pages
