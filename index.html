@@ -51,8 +51,9 @@
         // Player
         this.player = game.add.sprite((game.world.width / 2) - 12, (game.world.height / 2) - 11, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
+        this.player.anchor.setTo(0.5, 0.5);
         this.player.body.collideWorldBounds = true;
-        //this.player.body.setSize(50, 38, -5, -5);  
+        this.player.body.setSize(50, 38, 25, 19);  
 
         // Baddies
         this.baddies = game.add.group();
@@ -66,6 +67,8 @@
         this.score = 0;
         this.nextScoringTime = game.time.now;
         this.scoreText = game.add.text(15, 10, this.score.toString(), {font: '20px arial', fill: '#fff'});
+
+        console.log(this.player);
       },
 
       update: function(){
@@ -76,18 +79,24 @@
         this.player.body.velocity.y = 0;
         this.player.body.angularVelocity = 0;
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-          this.player.body.angularVelocity = -200;
-        } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-          this.player.body.angularVelocity = 200;
-        }
-
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-          game.physics.arcade.velocityFromAngle(this.player.angle, 300, this.player.body.velocity);
-        }
-
-        if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-          game.physics.arcade.velocityFromAngle(this.player.angle, -300, this.player.body.velocity);
+        // Add cursor control of player
+        if (this.cursors.left.isDown) {
+          this.player.angle = 180;
+          this.player.body.setSize(50, 38, 25, 19);  
+          this.player.body.velocity.x = -150;
+        } else if (this.cursors.right.isDown){
+          this.player.angle = 0;
+          this.player.body.setSize(50, 38, 25, 19);  
+          this.player.body.velocity.x = 150;
+        } else if (this.cursors.up.isDown){
+          this.player.angle = 270;
+          this.player.body.rotation = 270;
+          this.player.body.setSize(38, 50, 19, 25);  
+          this.player.body.velocity.y = -150;
+        } else if (this.cursors.down.isDown){
+          this.player.angle = 90;
+          this.player.body.setSize(38, 50, 19, 25);  
+          this.player.body.velocity.y = 150;
         }
 
         // Spawn baddies
@@ -103,6 +112,15 @@
           this.scoreText.text = this.score.toString();
         }
       },
+
+      /*render: function(){
+        game.debug.body(this.player);
+        game.debug.spriteBounds(this.player);
+        this.baddies.forEach(function(baddy){
+            game.debug.body(baddy);
+          game.debug.spriteBounds(baddy);
+            });
+      },*/
 
       newBaddy: function(){
         var startX, startY, angle;
@@ -126,8 +144,9 @@
 
         var baddy = this.baddies.create(startX, startY, 'baddy');
         game.physics.enable(baddy, Phaser.Physics.ARCADE);
-        baddy.body.rotation = angle;
-        //this.player.body.setSize(50, 38, -5, -5);  
+        baddy.anchor.setTo(0.5, 0.5);
+        baddy.angle = angle;
+        baddy.body.setSize(32, 30, 16, 15);  
         baddy.animations.add('move', [0, 1, 2], 10, true);
         baddy.animations.play('move');
         game.physics.arcade.velocityFromAngle(angle, 150, baddy.body.velocity);
