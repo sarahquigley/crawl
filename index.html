@@ -3,9 +3,12 @@
 <html>
   <head>
     <title>Crawl - a game by Sarah Quigley</title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="js/lib/underscore-min.js"></script>
     <script type="text/javascript" src="js/lib/phaser.min.js"></script>
-    
+    <script src="//www.parsecdn.com/js/parse-1.2.18.min.js"></script> 
+    <script type="text/javascript" src="js/scoreboard.js"></script>
+
     <link rel="shortcut icon" href="assets/ladybug-shadow-50.png">
 
     <style>
@@ -13,6 +16,7 @@
         margin: 0;
         padding: 0;
         border: 0;
+        font-family: Audiowide, sans-serif;
       }
 
       body{
@@ -26,7 +30,6 @@
 
       h2, p{
         font-weight: normal;
-        font-family: Audiowide, sans-serif;
         color: white;
       }
 
@@ -48,6 +51,14 @@
       #game canvas{
         border-radius: 10px;
         margin-bottom: 50px;
+      }
+      
+      #scoreboard{
+        width: 100%;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        background: #FFDC00;
       }
     </style>
   </head>
@@ -273,11 +284,29 @@
 
       <div id="game"></div>
 
-      <h2>A game by <a href="http://sarahquigley.net">Sarah Quigley</a></h2>
-      <p>Built in awesome 2-D Javascript gaming framework, <a href="http://phaser.io">Phaser</a>.</p>
-      <p>Heavily inspired by Thomas Palef's <a href="http://www.lessmilk.com/1/">Run</a>.</p>
+      <div id="description">
+        <h2>A game by <a href="http://sarahquigley.net">Sarah Quigley</a></h2>
+        <p>Built in awesome 2-D Javascript gaming framework, <a href="http://phaser.io">Phaser</a>.</p>
+        <p>Heavily inspired by Thomas Palef's <a href="http://www.lessmilk.com/1/">Run</a>.</p>
+      </div>
+
+      <div id="scoreit">
+        <table id="scoreboard">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Country</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+
+          <tbody id="scores"></tbody>
+
+        </table>
+      </div>
 
     </div>
+
 
   </body>
 
