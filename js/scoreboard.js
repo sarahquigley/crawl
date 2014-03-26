@@ -4,17 +4,36 @@ window.ScoreIt = {
   Models: {},
   Views: {},
   Collections: {},
-}
+  Live: {
+    Collections: {}
+  }
+};
 
 ScoreIt.Models.GameScore = Parse.Object.extend("GameScore", {
 
   initialize: function(){
+    this.belongsTo.scoreboard = ScoreIt.Live.Collections.scoreboard ? ScoreIt.Live.Collections.scoreboard : null;
   },
 
-  template: _.template("<tr><td><%= name %></td><td><%= country %></td><td><%= score %></td></tr>"),
+  belongsTo: {
+    scoreboard: null
+  },
+
+  isHighScore: function(){
+    return _.include(this.belongsTo.scoreboard.first(10), this);
+  },
+
+  template: {
+    show: _.template("<tr><td><%= name %></td><td><%= country %></td><td><%= score %></td></tr>"),
+    form: _.template("<tr><td><input type='text' name='name'></td><td><input type='text' name='country'></td><td><%= score %></td><td><input type='submit' value='Submit'></td></tr>")
+  },
 
   render: function(){
-    return this.template(this.attributes);
+    if(this.isNew()){
+      return this.template.form(this.attributes);
+    } else {
+      return this.template.show(this.attributes);
+    }
   }
 
 });
@@ -25,6 +44,7 @@ ScoreIt.Collections.Scoreboard = Parse.Collection.extend({
   comparator: function(model){
     return -model.get("score");
   }
+
 });
 
 ScoreIt.Views.Score = Parse.View.extend({
@@ -40,29 +60,64 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       var query = new Parse.Query("GameScore");
       query.find({
         success: function(scores){
-          that.collection.reset(scores);
+          that.collection.add(scores);
         },
         error: function(){
           console.log("Error: could not retrieve scores.");
         }
       });
+
+      this.model = new ScoreIt.Models.GameScore();
     },
 
-    el: "#scores",
+    events: {
+      "submit #score-form": "saveScore" 
+    },
+
+    template: {
+      scoreboard: "<form id='score-form'><table id='scoreboard'><thead><tr><th>Name</th><th>Country</th><th>Score</th></tr></thead><tbody id='scores'></tbody></table></form>"
+    },
+
+    el: "#scoreit",
 
     render: function(){
-      console.log("Rendering");
+      console.log('rendering');
       var that = this;
+      this.$el.html(this.template.scoreboard);
       _.each(this.collection.first(10), function(model){
-        that.$el.append(model.render());
+        that.$el.find("#scores").append(model.render());
       });
       return this.$el;
+    },
+
+    saveScore: function(event){
+      var that = this;
+      event.preventDefault();
+      var attrs = $(event.target).serializeJSON();
+      this.model.save(attrs, {
+        success: function(score){
+          that.model = new ScoreIt.Models.GameScore();
+        },
+        error: function(score, error){
+          console.log(error.message);
+        }
+      });
     }
 
 });
 
 $(function(){
+
+  var collections = ScoreIt.Live.Collections = {
+    scoreboard: new ScoreIt.Collections.Scoreboard()
+  };
     
-  ScoreboardView = new ScoreIt.Views.Scoreboard({ collection: new ScoreIt.Collections.Scoreboard()})
+  ScoreboardView = new ScoreIt.Views.Scoreboard({ collection: collections.scoreboard });
+
+  ScoreboardView.model.set("score", "100"); 
+  collections.scoreboard.add(ScoreboardView.model);
+
+  /*m = new ScoreIt.Models.Score({name: 'Moo', country: 'Mooland', score: 100});
+  m.save(null, {});*/
 
 });
