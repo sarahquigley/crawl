@@ -6,11 +6,13 @@ window.ScoreIt = {
   Views: {},
   Collections: {},
   Live: {
+    Collections: {},
     Views: {}
   },
 
   create: function(el){
-    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: new this.Collections.Scoreboard(), el: el });
+    this.Live.Collections.scoreboard = new this.Collections.Scoreboard();
+    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: this.Live.Collections.scoreboard, el: el });
   },
 
   registerScore: function(score){
@@ -68,7 +70,6 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       this.el = el;
       this.model = new ScoreIt.Models.GameScore();
       this.collection.on("all", this.render, this);
-      //this.model.on("change", this.render, this);
 
       var query = new Parse.Query("GameScore");
       query.find({
