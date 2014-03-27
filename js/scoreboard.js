@@ -14,6 +14,10 @@ window.ScoreIt = {
     this.Live.Collections.scoreboard = new this.Collections.Scoreboard();
     this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: this.Live.Collections.scoreboard, el: el });
   },
+  
+  isVisible: function(){
+    return this.Live.Views.scoreboard.isVisible;
+  },
 
   registerScore: function(score){
     this.Live.Views.scoreboard.registerScore(score);
@@ -69,6 +73,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
 
       this.el = el;
       this.model = new ScoreIt.Models.GameScore();
+      this.isVisible = false;
       this.collection.on("all", this.render, this);
 
       var query = new Parse.Query("GameScore");
@@ -119,9 +124,11 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     toggleScoreboard: function(){
       $el = this.$el.find("#scoreit-container");
       if ( $el.css("display") === "none" ) {
+        this.isVisible = true;
         $el.css("display", "");
       } else {
         $el.css("display", "none");
+        this.isVisible = false;
         this.collection.remove(this.model);
       }
     },

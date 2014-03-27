@@ -94,7 +94,7 @@
       },
 
       update: function(){
-        if (this.game.time.now > this.time && this.cursors.up.isDown) {
+        if (this.game.time.now > this.time && !ScoreIt.isVisible() && this.cursors.up.isDown) {
         game.state.start('Play');
         }
       }
@@ -252,13 +252,13 @@
         this.text.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
 
         this.cursors = game.input.keyboard.createCursorKeys();
-        this.time = this.game.time.now + 1000;
+        this.time = game.time.now + 1000;
         
         ScoreIt.registerScore(game.score.toString());
       },
 
       update: function(){
-        if (this.game.time.now > this.time && this.cursors.up.isDown) {
+        if (game.time.now > this.time && !ScoreIt.isVisible() && this.cursors.up.isDown) {
           game.state.start('Play');
         }
       }
