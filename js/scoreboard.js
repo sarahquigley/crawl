@@ -42,7 +42,7 @@ ScoreIt.Models.GameScore = Parse.Object.extend("GameScore", {
 
   template: {
     show: _.template("<tr class='new-score'><td><%= name %></td><td><%= country %></td><td><%= score %></td></tr>"),
-    form: _.template("<tr class='score'><td><input type='text' name='name'></td><td><input type='text' name='country'></td><td><%= score %></td></tr><td></td><td></td><td><input type='submit' value='Submit'></td></tr>")
+    form: _.template("<tr class='score'><td><input type='text' name='name' required></td><td><input type='text' name='country' required></td><td><%= score %></td></tr><td></td><td></td><td><input type='submit' value='Submit'></td></tr>")
   },
 
   render: function(){
