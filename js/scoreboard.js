@@ -6,21 +6,15 @@ window.ScoreIt = {
   Views: {},
   Collections: {},
   Live: {
-    Collections: {},
     Views: {}
   },
 
   create: function(el){
-    this.Live.Collections.scoreboard = new this.Collections.Scoreboard();
-    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: this.Live.Collections.scoreboard, el: el });
+    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: new this.Collections.Scoreboard(), el: el });
   },
 
   registerScore: function(score){
-    this.Live.Views.scoreboard.model.set("score", game.score.toString());
-    this.Live.Collections.scoreboard.add(this.Live.Views.scoreboard.model);
-    if ( this.Live.Views.scoreboard.model.isHighScore() ){
-      this.Live.Views.scoreboard.toggleScoreboard();
-    }
+    this.Live.Views.scoreboard.registerScore(score);
   }
 };
 
@@ -123,7 +117,22 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
 
     toggleScoreboard: function(){
       $el = this.$el.find("#scoreit-container");
-      $el.css("display", $el.css("display") === "none" ? "" : "none");
+      if ( $el.css("display") === "none" ) {
+        $el.css("display", "");
+      } else {
+        $el.css("display", "none");
+        this.collection.remove(this.model);
+      }
+    },
+
+    registerScore: function(score){
+      this.model.set("score", score.toString());
+      this.collection.add(this.model);
+      if ( this.model.isHighScore() ){
+        this.toggleScoreboard();
+      } else {
+        this.collection.remove(this.model);
+      }
     },
 
     saveScore: function(event){

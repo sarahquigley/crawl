@@ -41,13 +41,13 @@
   float: right;
 }
 
-#scoreit #scoreit-scoreboard button:before{
-  content: "X";
-}
-
 #scoreit #scoreit-scoreboard button:hover, #scoreit input[type=submit]:hover{
   border: 1px solid black;
   font-weight: bold;
+}
+
+#scoreit #scoreit-scoreboard button:before{
+  content: "X";
 }
 
 #scoreit h2{
