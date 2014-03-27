@@ -41,8 +41,8 @@ ScoreIt.Models.GameScore = Parse.Object.extend("GameScore", {
   },
 
   template: {
-    show: _.template("<tr class='new-score'><td><%= name %></td><td><%= country %></td><td><%= score %></td></tr>"),
-    form: _.template("<tr class='score'><td><input type='text' name='name' required></td><td><input type='text' name='country' required></td><td><%= score %></td></tr><td></td><td></td><td><input type='submit' value='Submit'></td></tr>")
+    show: _.template("<tr class='score'><td><%= name %></td><td><%= country %></td><td><%= score %></td><td></td></tr>"),
+    form: _.template("<tr class='new-score'><td><input type='text' name='name' placeholder='Name' required></td><td><input type='text' name='country' placeholder='Country' required></td><td><%= score %></td><td><input type='submit' value='Submit'></td></tr>")
   },
 
   render: function(){
@@ -102,7 +102,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
               <button class='toggle-scoreboard'></button>\
               <form id='score-form'>\
                 <table>\
-                  <thead><tr><th>Name</th><th>Country</th><th>Score</th></tr></thead>\
+                  <thead><tr><th>Name</th><th>Country</th><th>Score</th><th></th></tr></thead>\
                   <tbody id='scores'></tbody>\
                 </table>\
               </form>\
