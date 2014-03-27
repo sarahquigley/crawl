@@ -1,0 +1,72 @@
+#scoreit *{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+#scoreit button, #scoreit input[type=submit]{
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #FFDC00;
+  cursor: pointer;
+}
+
+#scoreit #scoreit-container{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: rgba(256, 256, 256, 0.7);
+}
+
+#scoreit #scoreit-scoreboard{
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  margin-left: -200px;
+  width: 400px;
+  height: 400px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  background: #FFDC00;
+}
+
+#scoreit #scoreit-scoreboard button, #scoreit input[type=submit]{
+  border: 1px solid #FFDC00;
+  background: black;
+  color: #FFDC00;
+  float: right;
+}
+
+#scoreit #scoreit-scoreboard button:before{
+  content: "X";
+}
+
+#scoreit #scoreit-scoreboard button:hover, #scoreit input[type=submit]:hover{
+  border: 1px solid black;
+  font-weight: bold;
+}
+
+#scoreit h2{
+  float: left;
+  color: black;
+}
+
+#scoreit table{
+  width: 100%;
+  border-spacing: 8px 3px;
+  border-collapse: separate;
+  text-align: left;
+}
+
+#scoreit table th{
+  color: white;
+}
+
+#scoreit input{
+  width: 100%;
+  padding: 5px 8px;
+}

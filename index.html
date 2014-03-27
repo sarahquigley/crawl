@@ -12,6 +12,8 @@
 
     <link rel="shortcut icon" href="assets/ladybug-shadow-50.png">
 
+    <link rel="stylesheet" type="text/css" href="css/scoreit.css">
+
     <style>
       *{
         margin: 0;
@@ -51,15 +53,11 @@
 
       #game canvas{
         border-radius: 10px;
-        margin-bottom: 50px;
+        margin-bottom: 25px;
       }
-      
-      #scoreboard{
-        width: 100%;
-        margin-top: 20px;
-        padding: 20px;
-        border-radius: 10px;
-        background: #FFDC00;
+
+      #description{
+        margin-top: 25px;
       }
     </style>
   </head>
@@ -255,11 +253,13 @@
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.time = this.game.time.now + 1000;
+        
+        ScoreIt.registerScore(game.score.toString());
       },
 
       update: function(){
         if (this.game.time.now > this.time && this.cursors.up.isDown) {
-        game.state.start('Play');
+          game.state.start('Play');
         }
       }
     };
@@ -277,6 +277,9 @@
     game.state.add('Over', Game.Over);
     game.state.start('Load');
 
+    $(function(){
+      ScoreIt.create("#scoreboard");
+    });
   </script>
 
   <body>
@@ -285,16 +288,15 @@
 
       <div id="game"></div>
 
+      <div id="scoreboard"></div>
+
       <div id="description">
         <h2>A game by <a href="http://sarahquigley.net">Sarah Quigley</a></h2>
         <p>Built in awesome 2-D Javascript gaming framework, <a href="http://phaser.io">Phaser</a>.</p>
         <p>Heavily inspired by Thomas Palef's <a href="http://www.lessmilk.com/1/">Run</a>.</p>
       </div>
 
-      <div id="scoreit"></div>
-
     </div>
-
 
   </body>
 
