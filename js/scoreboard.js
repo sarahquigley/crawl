@@ -115,7 +115,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       var filteredScores = this.collection.select(function(model){
         return this.model.score >= score;
       });
-      return this.filteredScores.length < 10;
+      return this.filteredScores.length < this.numScores;
     },
 
     fetchCollection: function(){
