@@ -75,16 +75,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       this.display = "none";
       this.model = new ScoreIt.Models.GameScore();
       this.collection.on("all", this.render, this);
-
-      var query = new Parse.Query("GameScore");
-      query.find({
-        success: function(scores){
-          that.collection.add(scores);
-        },
-        error: function(){
-          console.log("Error: could not retrieve scores.");
-        }
-      });
+      this.fetchCollection();
     },
 
     events: {
@@ -119,6 +110,17 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
         that.$el.find("#scores").append(model.render());
       });
       return this.$el;
+    },
+
+    fetchCollection: function(){
+      this.collection.fetch({
+        success: function(collection){
+          console.log("Success: retrieved scores.");
+        },
+        error: function(collection, error){
+          console.log(error.message);
+        }
+      });
     },
 
     toggleScoreboard: function(){
