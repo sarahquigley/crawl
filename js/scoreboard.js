@@ -16,7 +16,7 @@ window.ScoreIt = {
   },
   
   isVisible: function(){
-    return this.Live.Views.scoreboard.isVisible;
+    return this.Live.Views.scoreboard.isVisible();
   },
 
   registerScore: function(score){
@@ -72,8 +72,8 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       var that = this;
 
       this.el = el;
+      this.display = "none";
       this.model = new ScoreIt.Models.GameScore();
-      this.isVisible = false;
       this.collection.on("all", this.render, this);
 
       var query = new Parse.Query("GameScore");
@@ -93,10 +93,10 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     },
 
     template: {
-      scoreboard: "\
+      scoreboard: _.template("\
         <div id='scoreit'>\
           <button class='toggle-scoreboard'>View High Scores</button>\
-          <div id='scoreit-container' style='display: none'>\
+          <div id='scoreit-container' style='display: <%= display %>'>\
             <div id='scoreit-scoreboard'>\
               <h2>Top Scores!</h2>\
               <button class='toggle-scoreboard'></button>\
@@ -108,13 +108,13 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
               </form>\
             </div>\
           </div>\
-        </div>"
+        </div>")
     },
 
     render: function(){
       console.log('rendering');
       var that = this;
-      this.$el.html(this.template.scoreboard);
+      this.$el.html(this.template.scoreboard(this));
       _.each(this.collection.first(10), function(model){
         that.$el.find("#scores").append(model.render());
       });
@@ -124,11 +124,11 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     toggleScoreboard: function(){
       $el = this.$el.find("#scoreit-container");
       if ( $el.css("display") === "none" ) {
-        this.isVisible = true;
-        $el.css("display", "");
+        this.display = "block";
+        $el.css("display", "block");
       } else {
+        this.display = "none";
         $el.css("display", "none");
-        this.isVisible = false;
         this.collection.remove(this.model);
       }
     },
@@ -151,12 +151,15 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
         success: function(score){
           that.model = new ScoreIt.Models.GameScore();
           that.collection.trigger('add');
-          that.toggleScoreboard();
         },
         error: function(score, error){
           console.log(error.message);
         }
       });
+    },
+
+    isVisible: function(){
+      return this.display === "none" ? false : true;
     }
 
 });
