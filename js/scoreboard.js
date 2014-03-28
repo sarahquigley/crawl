@@ -10,9 +10,9 @@ window.ScoreIt = {
     Views: {}
   },
 
-  create: function(el){
+  create: function(el, numScores){
     this.Live.Collections.scoreboard = new this.Collections.Scoreboard();
-    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: this.Live.Collections.scoreboard, el: el });
+    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: this.Live.Collections.scoreboard, el: el, numScores: numScores });
   },
   
   isVisible: function(){
@@ -68,10 +68,9 @@ ScoreIt.Collections.Scoreboard = Parse.Collection.extend({
 //Scoreboard View
 ScoreIt.Views.Scoreboard = Parse.View.extend({
     
-    initialize: function(el){
+    initialize: function(options){
       var that = this;
-
-      this.el = el;
+      this.numScores = this.options.numScores;
       this.display = "none";
       this.model = new ScoreIt.Models.GameScore();
       this.collection.on("all", this.render, this);
@@ -106,7 +105,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       console.log('rendering');
       var that = this;
       this.$el.html(this.template.scoreboard(this));
-      _.each(this.collection.first(10), function(model){
+      _.each(this.collection.first(this.numScores), function(model){
         that.$el.find("#scores").append(model.render());
       });
       return this.$el;
