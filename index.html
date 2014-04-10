@@ -252,7 +252,7 @@
         this.cursors = game.input.keyboard.createCursorKeys();
         this.time = game.time.now + 1000;
         
-        ScoreIt.registerScore(game.score.toString());
+        ScoreIt.checkAndRegisterScore(game.score.toString());
       },
 
       update: function(){
