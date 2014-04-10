@@ -5,40 +5,33 @@ window.ScoreIt = {
   Models: {},
   Views: {},
   Collections: {},
-  Live: {
-    Collections: {},
-    Views: {}
-  },
 
   create: function(el, numScores){
-    this.Live.Collections.scoreboard = new this.Collections.Scoreboard();
-    this.Live.Views.scoreboard = new ScoreIt.Views.Scoreboard({ collection: this.Live.Collections.scoreboard, el: el, numScores: numScores });
+    this.scoreboard = new ScoreIt.Views.Scoreboard({ collection: new this.Collections.Scores(), el: el, numScores: numScores });
+  },
+  
+  isHighScore: function(score){
+    return this.scoreboard.isHighScore(score);
   },
   
   isVisible: function(){
-    return this.Live.Views.scoreboard.isVisible();
+    return this.scoreboard.isVisible();
   },
 
   registerScore: function(score){
-    this.Live.Views.scoreboard.registerScore(score);
+    this.scoreboard.registerScore(score);
+  },
+
+  checkAndRegisterScore: function(score){
+    if( this.scoreboard.isHighScore(score) ){
+      this.scoreboard.registerScore(score);
+    }
   }
 };
 
 
-// GameScore
-ScoreIt.Models.GameScore = Parse.Object.extend("GameScore", {
-
-  initialize: function(){
-    this.belongsTo.scoreboard = ScoreIt.Live.Collections.scoreboard ? ScoreIt.Live.Collections.scoreboard : null;
-  },
-
-  belongsTo: {
-    scoreboard: null
-  },
-
-  isHighScore: function(){
-    return _.include(this.belongsTo.scoreboard.first(10), this);
-  },
+// Score
+ScoreIt.Models.Score = Parse.Object.extend("GameScore", {
 
   template: {
     show: _.template("<tr class='score'><td><%= name %></td><td><%= country %></td><td><%= score %></td><td></td></tr>"),
@@ -66,8 +59,8 @@ ScoreIt.Models.GameScore = Parse.Object.extend("GameScore", {
 });
 
 // Scoreboard
-ScoreIt.Collections.Scoreboard = Parse.Collection.extend({
-  model: ScoreIt.Models.GameScore,
+ScoreIt.Collections.Scores = Parse.Collection.extend({
+  model: ScoreIt.Models.Score,
 
   comparator: function(model){
     return -model.get("score");
@@ -82,7 +75,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       var that = this;
       this.numScores = this.options.numScores;
       this.display = "none";
-      this.model = new ScoreIt.Models.GameScore();
+      this.model = new ScoreIt.Models.Score();
       this.collection.on("all", this.render, this);
       this.fetchCollection();
     },
@@ -123,9 +116,9 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
 
     isHighScore: function(score){
       var filteredScores = this.collection.select(function(model){
-        return this.model.score >= score;
+        return model.get("score") >= score;
       });
-      return this.filteredScores.length < this.numScores;
+      return filteredScores.length < this.numScores;
     },
 
     fetchCollection: function(){
@@ -154,11 +147,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     registerScore: function(score){
       this.model.set("score", score.toString());
       this.collection.add(this.model);
-      if ( this.model.isHighScore() ){
-        this.toggleScoreboard();
-      } else {
-        this.collection.remove(this.model);
-      }
+      this.toggleScoreboard();
     },
 
     saveScore: function(event){
@@ -167,7 +156,7 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       var attrs = $(event.target).serializeJSON();
       this.model.save(attrs, {
         success: function(score){
-          that.model = new ScoreIt.Models.GameScore();
+          that.model = new ScoreIt.Models.Score();
           that.collection.trigger('add');
         },
         error: function(score, error){
