@@ -31,7 +31,7 @@ window.ScoreIt = {
 
 
 // Score
-ScoreIt.Models.Score = Parse.Object.extend("GameScore", {
+ScoreIt.Models.Score = Parse.Object.extend("Score", {
 
   template: {
     show: _.template("<tr class='score'><td><%= name %></td><td><%= country %></td><td><%= score %></td><td></td></tr>"),
@@ -105,7 +105,6 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     },
 
     render: function(){
-      console.log('rendering');
       var that = this;
       this.$el.html(this.template.scoreboard(this));
       _.each(this.collection.first(this.numScores), function(model){
