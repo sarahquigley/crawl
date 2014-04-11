@@ -7,7 +7,7 @@ Player = function(game, cursors){
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.body.collideWorldBounds = true;
     this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
-}
+};
 
 Player.prototype = {
   config: {
@@ -41,7 +41,7 @@ Player.prototype = {
       this.sprite.body.velocity.y = this.config.velocity;
     }
   }
-}
+};
 
 Baddy = function(game, group){
   this.game = game;
@@ -58,7 +58,7 @@ Baddy = function(game, group){
   this.sprite.animations.add('move', [0, 1, 2], 10, true);
   this.sprite.animations.play('move');
   game.physics.arcade.velocityFromAngle(angle, this.config.velocity, this.sprite.body.velocity);
-}
+};
 
 Baddy.prototype = {
   config: {
@@ -92,8 +92,22 @@ Baddy.prototype = {
 
   update: function(){
   }
-}
+};
 
+Text = {
+  title: function(game, text){
+    var text = game.add.text(game.world.centerX, 150, text, {font: "90px 'Faster One'", fill:"#FFDC00", align: "center"});
+    text.anchor.setTo(0.5);
+    text.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
+  },
+
+  body: function(game, text, posY, fontSize){
+    text = game.add.text(game.world.centerX, posY, text, { font: fontSize + " Audiowide", fill: "#000", align: "center"});
+    text.anchor.setTo(0.5);
+    text.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
+  }
+
+};
 
 Game = {};
 
@@ -110,19 +124,11 @@ Game.Load.prototype = {
 
   create: function(){
     this.background = game.add.tileSprite(0, 0, 400, 400, 'background');
-
-    // Title text
-    this.title = game.add.text(game.world.centerX, 150, "Crawl", {font: "90px 'Faster One'", fill:"#FFDC00", align: "center"});
-    this.title.anchor.setTo(0.5);
-    this.title.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
-
-    // Text
-    this.text = game.add.text(game.world.centerX, 250, "move with arrow keys\npress UP to begin", { font: "20px Audiowide", fill: "#000", align: "center"});
-    this.text.anchor.setTo(0.5);
-    this.text.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
-
     this.cursors = game.input.keyboard.createCursorKeys();
     this.time = this.game.time.now + 1000;
+
+    Text.title(game, "Crawl");
+    Text.body(game, "move with arrow keys\npress UP to begin", 250, "20px");
   },
 
   update: function(){
@@ -198,24 +204,12 @@ Game.Over = function(game){};
 Game.Over.prototype = {
   create: function(){
     this.background = game.add.tileSprite(0, 0, 400, 400, 'background');
-
-    // Title text
-    this.title = game.add.text(game.world.centerX, 150, "Game\nOver", {font: "90px 'Faster One'", fill:"#FFDC00", align: "center"});
-    this.title.anchor.setTo(0.5);
-    this.title.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
-
-    // Score text
-    this.scoreText = game.add.text(game.world.centerX, 280, "You scored " + game.score + "!", { font: "30px Audiowide", fill: "#000", align: "center"});
-    this.scoreText.anchor.setTo(0.5);
-    this.scoreText.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
-
-    // Other Text
-    this.text = game.add.text(game.world.centerX, 310, "press UP to restart", { font: "22px Audiowide", fill: "#000", align: "center"});
-    this.text.anchor.setTo(0.5);
-    this.text.setShadow(5, 5, 'rgba(0,0,0,0.7)', 15);
-
     this.cursors = game.input.keyboard.createCursorKeys();
     this.time = game.time.now + 1000;
+
+    Text.title(game, "Game\nOver");
+    Text.body(game, "You scored " + game.score + "!", 280, "30px");
+    Text.body(game, "press UP to restart", 310, "22px");
 
     ScoreIt.checkAndRegisterScore(game.score.toString());
   },
