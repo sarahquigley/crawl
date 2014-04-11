@@ -1,0 +1,44 @@
+*{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: Audiowide, sans-serif;
+}
+
+body{
+  background: black;
+}
+
+h1{
+  font: 90px 'Faster One';
+  color: #FFDC00;
+}
+
+h2, p{
+  font-weight: normal;
+  color: white;
+}
+
+a{
+  color: #FFDC00;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+#content{
+  margin: 120px auto 0 auto;
+  text-align: center;
+  width: 400px;
+}
+
+#game canvas{
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+#description{
+  margin-top: 25px;
+}
