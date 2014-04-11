@@ -43,10 +43,55 @@ Player.prototype = {
   }
 }
 
-Baddy = function(){
+Baddy = function(game, group){
+  this.game = game;
+  this.group = group;
+
+  var pos = this.randomStartingPosition();
+  var angle = this.randomAngle(pos);
+
+  this.sprite = this.group.create(pos[0], pos[1], 'baddy');
+  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+  this.sprite.anchor.setTo(0.5, 0.5);
+  this.sprite.angle = angle;
+  this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
+  this.sprite.animations.add('move', [0, 1, 2], 10, true);
+  this.sprite.animations.play('move');
+  game.physics.arcade.velocityFromAngle(angle, this.config.velocity, this.sprite.body.velocity);
 }
 
 Baddy.prototype = {
+  config: {
+    bodyWidth: 26,
+    bodyHeight: 24,
+    velocity: 150 * 1.2
+  },
+
+  randomStartingPosition: function(){
+    if (this.game.rnd.integerInRange(0, 1) === 0) {
+      startX = this.game.world.randomX;
+      startY = this.game.rnd.integerInRange(0, 1) === 0 ? -25 : 425;
+    } else {
+      startY = this.game.world.randomY;
+      startX = this.game.rnd.integerInRange(0, 1) === 0 ? -26 : 426;
+    }
+    return [startX, startY];
+  },
+
+  randomAngle: function(pos){
+    if (pos[0] <= 200 && pos[1] <= 200) {
+      return this.game.rnd.integerInRange(20, 70);
+    } else if ( pos[0] > 200 && pos[1] <= 200 ) {
+      return this.game.rnd.integerInRange(110, 160);
+    } else if ( pos[0] > 200 && pos[1] >= 200 ) {
+      return this.game.rnd.integerInRange(200, 250);
+    } else {
+      return this.game.rnd.integerInRange(290, 340);
+    }
+  },
+
+  update: function(){
+  }
 }
 
 
@@ -112,7 +157,7 @@ Game.Play.prototype = {
   },
 
   update: function(){
-    game.physics.arcade.overlap(this.player.sprite, this.baddies, this.killPlayer, null, this);
+    game.physics.arcade.overlap(this.player.sprite, this.baddies, this.gameOver, null, this);
 
     // Player
     this.player.update();
@@ -120,7 +165,7 @@ Game.Play.prototype = {
     // Spawn baddies
     if(game.time.now >= this.nextBaddyTime){
       this.nextBaddyTime += 500;
-      this.newBaddy();
+      new Baddy(game, this.baddies);
     }
 
     // Increase score
@@ -140,43 +185,7 @@ Game.Play.prototype = {
     });
     },*/
 
-  newBaddy: function(){
-    var startX, startY, angle;
-    if (game.rnd.integerInRange(0, 1) === 0) {
-      startX = game.world.randomX;
-      startY = game.rnd.integerInRange(0, 1) === 0 ? -25 : 425;
-    } else {
-      startY = game.world.randomY;
-      startX = game.rnd.integerInRange(0, 1) === 0 ? -26 : 426;
-    }
-
-    if (startX <= 200 && startY <= 200) {
-      angle = game.rnd.integerInRange(20, 70);
-    } else if ( startX > 200 && startY <= 200 ) {
-      angle = game.rnd.integerInRange(110, 160);
-    } else if ( startX > 200 && startY >= 200 ) {
-      angle = game.rnd.integerInRange(200, 250);
-    } else {
-      angle = game.rnd.integerInRange(290, 340);
-    }
-
-    var baddy = this.baddies.create(startX, startY, 'baddy');
-    baddy.config = {
-      bodyWidth: 26,
-      bodyHeight: 24,
-      velocity: 150 * 1.2
-    }
-    game.physics.enable(baddy, Phaser.Physics.ARCADE);
-    baddy.anchor.setTo(0.5, 0.5);
-    baddy.angle = angle;
-    baddy.body.setSize(baddy.config.bodyWidth, baddy.config.bodyHeight, baddy.config.bodyWidth/2, baddy.config.bodyHeight/2);  
-    baddy.animations.add('move', [0, 1, 2], 10, true);
-    baddy.animations.play('move');
-    game.physics.arcade.velocityFromAngle(angle, baddy.config.velocity, baddy.body.velocity);
-  },
-
-  killPlayer: function(player, baddy){
-    console.log('kill');
+  gameOver: function(player, baddy){
     player.kill();
     game.score = this.score;
     game.state.start('Over');
