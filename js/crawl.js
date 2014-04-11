@@ -117,22 +117,22 @@ Game.Play.prototype = {
 
   newBaddy: function(){
     var startX, startY, angle;
-    if (_.random(0, 1) === 0) {
+    if (game.rnd(0, 1) === 0) {
       startX = game.world.randomX;
-      startY = _.random(0, 1) === 0 ? -25 : 425;
+      startY = game.rnd(0, 1) === 0 ? -25 : 425;
     } else {
       startY = game.world.randomY;
-      startX = _.random(0, 1) === 0 ? -26 : 426;
+      startX = game.rnd(0, 1) === 0 ? -26 : 426;
     }
 
     if (startX <= 200 && startY <= 200) {
-      angle = _.random(20, 70);
+      angle = game.rnd(20, 70);
     } else if ( startX > 200 && startY <= 200 ) {
-      angle = _.random(110, 160);
+      angle = game.rnd(110, 160);
     } else if ( startX > 200 && startY >= 200 ) {
-      angle = _.random(200, 250);
+      angle = game.rnd(200, 250);
     } else {
-      angle = _.random(290, 340);
+      angle = game.rnd(290, 340);
     }
 
     var baddy = this.baddies.create(startX, startY, 'baddy');
