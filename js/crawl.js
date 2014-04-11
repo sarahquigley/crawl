@@ -1,3 +1,55 @@
+Player = function(game, cursors){
+    this.game = game;
+    this.cursors = cursors;
+
+    this.sprite = this.game.add.sprite((this.game.world.centerX) - 21, (this.game.world.centerY) - 16, 'player');
+    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.body.collideWorldBounds = true;
+    this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
+}
+
+Player.prototype = {
+  config: {
+    bodyWidth: 42,
+    bodyHeight: 32,
+    velocity: 150 * 1.2
+  },
+
+  rotate: function(angle){
+    this.sprite.angle = angle;
+    this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
+  },
+
+  update: function(){
+    this.sprite.body.velocity.x = 0;
+    this.sprite.body.velocity.y = 0;
+    this.sprite.body.angularVelocity = 0;
+
+    // Add cursor control of player
+    if (this.cursors.left.isDown) {
+      this.rotate(180);
+      this.sprite.body.velocity.x = -this.config.velocity;
+    } else if (this.cursors.right.isDown){
+      this.rotate(0);
+      this.sprite.body.velocity.x = this.config.velocity;
+    } else if (this.cursors.up.isDown){
+      this.rotate(270);
+      this.sprite.body.velocity.y = -this.config.velocity;
+    } else if (this.cursors.down.isDown){
+      this.rotate(90);
+      this.sprite.body.velocity.y = this.config.velocity;
+    }
+  }
+}
+
+Baddy = function(){
+}
+
+Baddy.prototype = {
+}
+
+
 Game = {};
 
 Game.Load = function(game){};
@@ -41,26 +93,16 @@ Game.Play.prototype = {
 
   create: function(){
     this.background = game.add.tileSprite(0, 0, 400, 400, 'background');
+    this.cursors = game.input.keyboard.createCursorKeys();
 
     // Player
-    this.player = game.add.sprite((game.world.centerX) - 21, (game.world.centerY) - 16, 'player');
-    this.player.config = {
-      bodyWidth: 42,
-      bodyHeight: 32,
-      velocity: 150 * 1.2
-    }
-    game.physics.enable(this.player, Phaser.Physics.ARCADE);
-    this.player.anchor.setTo(0.5, 0.5);
-    this.player.body.collideWorldBounds = true;
-    this.player.body.setSize(this.player.config.bodyWidth, this.player.config.bodyHeight, this.player.config.bodyWidth/2, this.player.config.bodyHeight/2);  
+    this.player = new Player(game, this.cursors); 
 
     // Baddies
     this.baddies = game.add.group();
     this.baddies.setAll('outOfBoundsKill', true);
     this.nextBaddyTime = game.time.now;
 
-    // Cursors
-    this.cursors = game.input.keyboard.createCursorKeys();
 
     // Scoretext
     this.score = 0;
@@ -70,27 +112,10 @@ Game.Play.prototype = {
   },
 
   update: function(){
-    game.physics.arcade.overlap(this.player, this.baddies, this.killPlayer, null, this);
+    game.physics.arcade.overlap(this.player.sprite, this.baddies, this.killPlayer, null, this);
 
     // Player
-    this.player.body.velocity.x = 0;
-    this.player.body.velocity.y = 0;
-    this.player.body.angularVelocity = 0;
-
-    // Add cursor control of player
-    if (this.cursors.left.isDown) {
-      this.rotatePlayer(this.player, 180, this.player.config.bodyWidth, this.player.config.bodyHeight);
-      this.player.body.velocity.x = -this.player.config.velocity;
-    } else if (this.cursors.right.isDown){
-      this.rotatePlayer(this.player, 0, this.player.config.bodyWidth, this.player.config.bodyHeight);
-      this.player.body.velocity.x = this.player.config.velocity;
-    } else if (this.cursors.up.isDown){
-      this.rotatePlayer(this.player, 270, this.player.config.bodyHeight, this.player.config.bodyWidth);
-      this.player.body.velocity.y = -this.player.config.velocity;
-    } else if (this.cursors.down.isDown){
-      this.rotatePlayer(this.player, 90, this.player.config.bodyHeight, this.player.config.bodyWidth);
-      this.player.body.velocity.y = this.player.config.velocity;
-    }
+    this.player.update();
 
     // Spawn baddies
     if(game.time.now >= this.nextBaddyTime){
@@ -117,22 +142,22 @@ Game.Play.prototype = {
 
   newBaddy: function(){
     var startX, startY, angle;
-    if (game.rnd(0, 1) === 0) {
+    if (game.rnd.integerInRange(0, 1) === 0) {
       startX = game.world.randomX;
-      startY = game.rnd(0, 1) === 0 ? -25 : 425;
+      startY = game.rnd.integerInRange(0, 1) === 0 ? -25 : 425;
     } else {
       startY = game.world.randomY;
-      startX = game.rnd(0, 1) === 0 ? -26 : 426;
+      startX = game.rnd.integerInRange(0, 1) === 0 ? -26 : 426;
     }
 
     if (startX <= 200 && startY <= 200) {
-      angle = game.rnd(20, 70);
+      angle = game.rnd.integerInRange(20, 70);
     } else if ( startX > 200 && startY <= 200 ) {
-      angle = game.rnd(110, 160);
+      angle = game.rnd.integerInRange(110, 160);
     } else if ( startX > 200 && startY >= 200 ) {
-      angle = game.rnd(200, 250);
+      angle = game.rnd.integerInRange(200, 250);
     } else {
-      angle = game.rnd(290, 340);
+      angle = game.rnd.integerInRange(290, 340);
     }
 
     var baddy = this.baddies.create(startX, startY, 'baddy');
@@ -150,12 +175,8 @@ Game.Play.prototype = {
     game.physics.arcade.velocityFromAngle(angle, baddy.config.velocity, baddy.body.velocity);
   },
 
-  rotatePlayer: function(player, angle, bodyWidth, bodyHeight){
-    player.angle = angle;
-    player.body.setSize(bodyWidth, bodyHeight, bodyWidth/2, bodyHeight/2);  
-  },
-
   killPlayer: function(player, baddy){
+    console.log('kill');
     player.kill();
     game.score = this.score;
     game.state.start('Over');
