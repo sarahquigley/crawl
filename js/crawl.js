@@ -51,7 +51,6 @@ Player.prototype = {
   },
 
   cleanup: function(){
-    this.sprite.destroy();
     this.game.sound.remove(this.music);
   }
 };
@@ -70,7 +69,21 @@ Baddy = function(game, group){
   this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
   this.sprite.animations.add('move', [0, 1, 2], 10, true);
   this.sprite.animations.play('move');
+  this.sprite.checkWorldBounds = true;
+  this.entered = false;
+
+  this.sprite.events.onOutOfBounds.add(function(){
+    if(this.entered){
+      this.game.sound.remove(this.sprite.music);
+    } else {
+      this.entered = true;
+    }
+  }, this);
+
   game.physics.arcade.velocityFromAngle(angle, this.config.velocity, this.sprite.body.velocity);
+
+  this.sprite.music = this.game.add.audio('baddy', 0.4, true);
+  this.sprite.music.play();
 };
 
 Baddy.prototype = {
@@ -182,7 +195,6 @@ Game.Play.prototype = {
 
     // Baddies
     this.baddies = game.add.group();
-    this.baddies.setAll('outOfBoundsKill', true);
     this.nextBaddyTime = game.time.now;
 
     // Scoretext
@@ -214,6 +226,9 @@ Game.Play.prototype = {
 
   cleanup: function(){
     game.sound.remove(this.music);
+    this.baddies.forEach(function(baddy){
+      game.sound.remove(baddy.music);
+    }, this);
   },
 
   /*render: function(){
