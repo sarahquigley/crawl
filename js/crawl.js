@@ -7,7 +7,7 @@ Player = function(game, cursors){
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.body.collideWorldBounds = true;
     this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
-    this.music = this.game.add.audio('player', 1, true);
+    this.music = this.game.add.audio('player', 0.3, true);
     this.music.play();
 };
 
@@ -48,7 +48,11 @@ Player.prototype = {
     } else {
       this.music.pause();
     }
+  },
 
+  cleanup: function(){
+    this.sprite.destroy();
+    this.game.sound.remove(this.music);
   }
 };
 
@@ -143,12 +147,20 @@ Game.Load.prototype = {
     this.cursors = game.input.keyboard.createCursorKeys();
     this.time = this.game.time.now + 1000;
 
+    this.music = game.add.sound('title', 1, true);
+    this.music.play();
+
     Text.title(game, "Crawl");
     Text.body(game, "move with arrow keys\npress UP to begin", 250, "20px");
   },
 
+  cleanup: function(){
+    game.sound.remove(this.music);
+  },
+
   update: function(){
     if (this.game.time.now > this.time && !ScoreIt.isVisible() && this.cursors.up.isDown) {
+      this.cleanup();
       game.state.start('Play');
     }
   }
@@ -161,6 +173,9 @@ Game.Play.prototype = {
   create: function(){
     this.background = game.add.tileSprite(0, 0, 400, 400, 'background');
     this.cursors = game.input.keyboard.createCursorKeys();
+
+    this.music = game.add.sound('play', 1, true);
+    this.music.play();
 
     // Player
     this.player = new Player(game, this.cursors); 
@@ -197,6 +212,10 @@ Game.Play.prototype = {
     }
   },
 
+  cleanup: function(){
+    game.sound.remove(this.music);
+  },
+
   /*render: function(){
     game.debug.body(this.player);
     game.debug.spriteBounds(this.player);
@@ -209,7 +228,8 @@ Game.Play.prototype = {
   gameOver: function(player, baddy){
     player.kill();
     game.score = this.score;
-    this.player.music.destroy();
+    this.player.cleanup();
+    this.cleanup();
     game.state.start('Over');
   }
 
@@ -223,6 +243,9 @@ Game.Over.prototype = {
     this.cursors = game.input.keyboard.createCursorKeys();
     this.time = game.time.now + 1000;
 
+    this.music = game.add.sound('title', 1, true);
+    this.music.play();
+
     Text.title(game, "Game\nOver");
     Text.body(game, "You scored " + game.score + "!", 280, "30px");
     Text.body(game, "press UP to restart", 310, "22px");
@@ -230,8 +253,13 @@ Game.Over.prototype = {
     ScoreIt.checkAndRegisterScore(game.score.toString());
   },
 
+  cleanup: function(){
+    game.sound.remove(this.music);
+  },
+
   update: function(){
     if (game.time.now > this.time && !ScoreIt.isVisible() && this.cursors.up.isDown) {
+      this.cleanup();
       game.state.start('Play');
     }
   }
