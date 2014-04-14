@@ -7,6 +7,8 @@ Player = function(game, cursors){
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.body.collideWorldBounds = true;
     this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
+    this.music = this.game.add.audio('player', 1, true);
+    this.music.play();
 };
 
 Player.prototype = {
@@ -24,7 +26,7 @@ Player.prototype = {
   update: function(){
     this.sprite.body.velocity.x = 0;
     this.sprite.body.velocity.y = 0;
-    this.sprite.body.angularVelocity = 0;
+    this.music.pause();
 
     // Add cursor control of player
     if (this.cursors.left.isDown) {
@@ -40,6 +42,13 @@ Player.prototype = {
       this.rotate(90);
       this.sprite.body.velocity.y = this.config.velocity;
     }
+
+    if ( this.sprite.body.velocity.x != 0 || this.sprite.body.velocity.y != 0 ){
+      this.music.resume();
+    } else {
+      this.music.pause();
+    }
+
   }
 };
 
@@ -120,6 +129,13 @@ Game.Load.prototype = {
     game.load.image('player', 'assets/ladybug-shadow-60.png');
     game.load.spritesheet('baddy', 'assets/ant-spritesheet-shadow-30.png', 32, 30);
     game.load.image('background', 'assets/background.jpg');
+
+    game.load.audio('title', ['assets/audio/Buggybug_Title.mp3', 'assets/audio/Buggybug_Title.ogg']);
+    game.load.audio('start', ['assets/audio/Buggybug_Start.mp3', 'assets/audio/Buggybug_Start.ogg']);
+    game.load.audio('play', ['assets/audio/Buggybug.mp3', 'assets/audio/Buggybug_Full.ogg']);
+    game.load.audio('over', ['assets/audio/Buggybug_Over.mp3', 'assets/audio/Buggybug_Over.ogg']);
+    game.load.audio('player', ['assets/audio/Buggybug_Walk.mp3', 'assets/audio/Buggybug_Walk.ogg']);
+    game.load.audio('baddy', ['assets/audio/Buggyant_Walk_Long.mp3', 'assets/audio/Buggyant_Walk_Long.ogg']);
   },
 
   create: function(){
@@ -153,7 +169,6 @@ Game.Play.prototype = {
     this.baddies = game.add.group();
     this.baddies.setAll('outOfBoundsKill', true);
     this.nextBaddyTime = game.time.now;
-
 
     // Scoretext
     this.score = 0;
@@ -194,6 +209,7 @@ Game.Play.prototype = {
   gameOver: function(player, baddy){
     player.kill();
     game.score = this.score;
+    this.player.music.destroy();
     game.state.start('Over');
   }
 
