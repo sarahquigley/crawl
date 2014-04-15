@@ -296,3 +296,7 @@ game.state.start('Load');
 $(function(){
   ScoreIt.create("#scoreboard", 12);
 });
+
+$(window).load(function(){
+  $('.loader').fadeOut("slow");
+});
