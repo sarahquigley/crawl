@@ -73,10 +73,12 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     
     initialize: function(options){
       var that = this;
+      this.loading = false;
       this.numScores = this.options.numScores;
       this.display = "none";
       this.model = new ScoreIt.Models.Score();
       this.collection.on("all", this.render, this);
+      //this.on("toggleLoading", this.render, this);
       this.fetchCollection();
     },
 
@@ -88,20 +90,24 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     template: {
       scoreboard: _.template("\
         <div id='scoreit'>\
-          <button class='toggle-scoreboard'>View High Scores</button>\
-          <div id='scoreit-container' style='display: <%= display %>'>\
-            <div id='scoreit-scoreboard'>\
-              <h2>Top Scores!</h2>\
-              <button class='toggle-scoreboard'></button>\
-              <form id='score-form'>\
-                <table>\
-                  <thead><tr><th>Name</th><th>Country</th><th>Score</th><th></th></tr></thead>\
-                  <tbody id='scores'></tbody>\
-                </table>\
-              </form>\
+            <button class='toggle-scoreboard'>View High Scores</button>\
+            <div id='scoreit-container' style='display: <%= display %>'>\
+              <div id='scoreit-scoreboard'>\
+                <% if ( loading ){ %>\
+                  <div class='scoreit-loader'></div>\
+                <% } else { %>\
+                  <h2>Top Scores!</h2>\
+                  <button class='toggle-scoreboard'></button>\
+                  <form id='score-form'>\
+                    <table>\
+                      <thead><tr><th>Name</th><th>Country</th><th>Score</th><th></th></tr></thead>\
+                      <tbody id='scores'></tbody>\
+                    </table>\
+                  </form>\
+                <% } %>\
+              </div>\
             </div>\
-          </div>\
-        </div>")
+        </div>"),
     },
 
     render: function(){
@@ -131,6 +137,10 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
       });
     },
 
+    toggleLoading: function(){
+      this.loading = this.loading ? false : true;
+    },
+
     toggleScoreboard: function(){
       $el = this.$el.find("#scoreit-container");
       if ( $el.css("display") === "none" ) {
@@ -151,11 +161,13 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
 
     saveScore: function(event){
       var that = this;
+      this.toggleLoading();
       event.preventDefault();
       var attrs = $(event.target).serializeJSON();
       this.model.save(attrs, {
         success: function(score){
           that.model = new ScoreIt.Models.Score();
+          that.toggleLoading();
           that.collection.trigger('add');
         },
         error: function(score, error){

@@ -28,7 +28,7 @@
   display: inline-block;
   min-width: 400px;
   max-width: 480px;
-  min-height: 400px;
+  height: 400px;
   padding: 25px 20px;
   border-radius: 10px;
   background: #FFDC00;
@@ -89,4 +89,10 @@
   width: 100%;
   padding-bottom: 2px;
   font-size: 14px;
+}
+
+#scoreit .scoreit-loader{
+  width: 100%;
+  height: 100%;
+  background: url('/assets/scoreboard-loader.gif') center 154 no-repeat;
 }
