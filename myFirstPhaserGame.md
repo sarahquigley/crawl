@@ -19,4 +19,12 @@ Your current directory will now be served from port 9090.
 2. Phaser docs
     http://docs.phaser.io/index.html
 3. Phaser wiki
-    https://github.com/photonstorm/phaser/wiki/_pages
+    https://github.com/photonstorm/phaser/wiki/pages
+4. Phaser forum
+    http://www.html5gamedevs.com/forum/14-phaser/
+
+## Useful Tools
+
+Online sound conversion tool, handy for converting individual files
+http://www.online-convert.com/
+
