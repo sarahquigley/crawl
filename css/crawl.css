@@ -34,7 +34,7 @@ a:hover{
   position: absolute;
   top: 0;
   left: 0;
-  background: black url('/assets/loader.gif') no-repeat center 170px;
+  background: black url('/assets/game-loader.gif') no-repeat center 299px;
 }
 
 #content{

@@ -298,5 +298,5 @@ $(function(){
 });
 
 $(window).load(function(){
-  $('.loader').fadeOut("slow");
+  $('.loader').fadeOut(1000);
 });
