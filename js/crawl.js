@@ -7,7 +7,7 @@ Player = function(game, cursors){
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.body.collideWorldBounds = true;
     this.sprite.body.setSize(this.config.bodyWidth, this.config.bodyHeight, this.config.bodyWidth/2, this.config.bodyHeight/2);  
-    this.music = this.game.add.audio('player', 0.3, true);
+    this.music = this.game.add.audio('player', 0.5, true);
     this.music.play();
 };
 
@@ -70,20 +70,8 @@ Baddy = function(game, group){
   this.sprite.animations.add('move', [0, 1, 2], 10, true);
   this.sprite.animations.play('move');
   this.sprite.checkWorldBounds = true;
-  this.entered = false;
-
-  this.sprite.events.onOutOfBounds.add(function(){
-    if(this.entered){
-      this.game.sound.remove(this.sprite.music);
-    } else {
-      this.entered = true;
-    }
-  }, this);
 
   game.physics.arcade.velocityFromAngle(angle, this.config.velocity, this.sprite.body.velocity);
-
-  this.sprite.music = this.game.add.audio('baddy', 0.4, true);
-  this.sprite.music.play();
 };
 
 Baddy.prototype = {
@@ -147,12 +135,12 @@ Game.Load.prototype = {
     game.load.spritesheet('baddy', 'assets/ant-spritesheet-shadow-30.png', 32, 30);
     game.load.image('background', 'assets/background.jpg');
 
-    game.load.audio('title', ['assets/audio/Buggybug_Title.mp3', 'assets/audio/Buggybug_Title.ogg']);
-    game.load.audio('start', ['assets/audio/Buggybug_Start.mp3', 'assets/audio/Buggybug_Start.ogg']);
-    game.load.audio('play', ['assets/audio/Buggybug.mp3', 'assets/audio/Buggybug_Full.ogg']);
-    game.load.audio('over', ['assets/audio/Buggybug_Over.mp3', 'assets/audio/Buggybug_Over.ogg']);
-    game.load.audio('player', ['assets/audio/Buggybug_Walk.mp3', 'assets/audio/Buggybug_Walk.ogg']);
-    game.load.audio('baddy', ['assets/audio/Buggyant_Walk_Long.mp3', 'assets/audio/Buggyant_Walk_Long.ogg']);
+    game.load.audio('title', ['assets/audio/title.mp3', 'assets/audio/title.ogg']);
+    game.load.audio('start', ['assets/audio/start.mp3', 'assets/audio/start.ogg']);
+    game.load.audio('play', ['assets/audio/play.mp3', 'assets/audio/play.ogg']);
+    game.load.audio('over', ['assets/audio/over.mp3', 'assets/audio/over.ogg']);
+    game.load.audio('player', ['assets/audio/playerwalk.mp3', 'assets/audio/playerwalk.ogg']);
+    game.load.audio('baddy', ['assets/audio/antwalk.mp3', 'assets/audio/antwalk.ogg']);
   },
 
   create: function(){
@@ -226,9 +214,6 @@ Game.Play.prototype = {
 
   cleanup: function(){
     game.sound.remove(this.music);
-    this.baddies.forEach(function(baddy){
-      game.sound.remove(baddy.music);
-    }, this);
   },
 
   /*render: function(){
