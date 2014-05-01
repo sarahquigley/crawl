@@ -127,23 +127,30 @@ ScoreIt.Views.Scoreboard = Parse.View.extend({
     },
 
     fetchCollection: function(){
+      var that = this;
+      //this.toggleLoading();
       this.collection.fetch({
+        //merge: true,
         success: function(collection){
           console.log("Success: retrieved scores.");
+          //that.toggleLoading();
         },
         error: function(collection, error){
           console.log(error.message);
+          //that.toggleLoading();
         }
       });
     },
 
     toggleLoading: function(){
       this.loading = this.loading ? false : true;
+      this.trigger('toggleLoading');
     },
 
     toggleScoreboard: function(){
       $el = this.$el.find("#scoreit-container");
       if ( $el.css("display") === "none" ) {
+        //this.fetchCollection();
         this.display = "block";
         $el.css("display", "block");
       } else {
