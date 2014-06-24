@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "Phaser Game Scores": {
+            "applicationId": "b7eMx0nuSX5fv4V06gXLNhxoftCHbk4CKSOotHCv", 
+            "masterKey": "7hxz9xrOiMqzoCEjtB6abclULyi6BspO8rR07Yu9"
+        }, 
+        "_default": {
+            "link": "Phaser Game Scores"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.18"
+    }
+}
