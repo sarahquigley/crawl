@@ -1,8 +1,8 @@
-# Contributing to Coffeescript App Skeleton
+# Contributing to Crawl
 
 First off, thank you for contributing! All contributions, big or small, are really appreciated.
 
-The following is a set of guidelines for contributing to CoffeeScript App Skeleton, which is hosted at [Coffeescript App Skeleton](https://github.com/mstewart/coffeescript-app-skeleton) on GitHub. These are just guidelines, not rules, use your best judgment and feel free to propose changes to this document in a pull request.
+The following is a set of guidelines for contributing to Crawl, which is hosted at [Crawl](https://github.com/sarahquigley/crawl) on GitHub. These are just guidelines, not rules, use your best judgment and feel free to propose changes to this document in a pull request.
 
 #### Table Of Contents
 
@@ -15,11 +15,11 @@ The following is a set of guidelines for contributing to CoffeeScript App Skelet
 
 ## Submitting Issues
 
-You can create an issue [here](https://github.com/mstewart/coffeescript-app-skeleton/issues/new). Before doing so, please read the notes below on submitting issues of different types. For issues of all types, please include as many details as possible in your report.
+You can create an issue [here](https://github.com/sarahquigley/crawl/issues/new). Before doing so, please read the notes below on submitting issues of different types. For issues of all types, please include as many details as possible in your report.
 
 ### Reporting bugs
 
-* Before reporting a bug, please to check the [existing issues](https://github.com/mstewart/coffeescript-app-skeleton/issues) to see if the problem that you have been observed has been previously reported.
+* Before reporting a bug, please to check the [existing issues](https://github.com/sarahquigley/crawl/issues) to see if the problem that you have been observed has been previously reported.
 * Describe the behavior you expected and the actual behaviour you observed. 
 * Include the browser, browser version, OS, OS version and device where you experienced the problem.
 * Include screenshots and / or other supplementary material, whenever relevant and possible; they are very helpful.
@@ -71,7 +71,7 @@ Coming soon!
 * If a method is private method of a class, it does not strictly require unit testing.
 * Treat `describe` as a noun or situation (often the name of class or method).
 * Treat `it` as a statement about state or how an operation changes state.
-* For instructions on how to to run specs, see information on the project's grunt tasks in our [README](https://github.com/mstewart/coffeescript-app-skeleton#grunt-tasks).
+* For instructions on how to to run specs, see information on the project's grunt tasks in our [README](https://github.com/sarahquigley/crawl#grunt-tasks).
 
 ### Example
 
@@ -111,4 +111,4 @@ describe 'Cat', ->
 Coming soon!
 
 
-This project adheres to the [Contributor Covenant 1.2](http://contributor-covenant.org/version/1/2/0). By participating, you are expected to uphold this code. Please report unacceptable behavior to [sarah@mstewart.net](mailto:sarah@mstewart.net).
+This project adheres to the [Contributor Covenant 1.2](http://contributor-covenant.org/version/1/2/0). By participating, you are expected to uphold this code. Please report unacceptable behavior to [sarah@sarahquigley.net](mailto:sarah@sarahquigley.net).

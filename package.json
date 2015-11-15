@@ -1,8 +1,8 @@
 {
-  "name": "coffeescript-app-skeleton",
-  "description": "Coffeescript App Skeleton",
+  "name": "crawl",
+  "description": "Crawl",
   "version": "0.0.0",
-  "homepage": "https://github.com/mstewart/coffeescript-app-skeleton",
+  "homepage": "https://github.com/sarahquigley/crawl",
   "private": false,
   "devDependencies": {
     "bower": "~1.3.12",

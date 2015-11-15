@@ -1,5 +1,5 @@
 {
-  "name": "coffeescript-app-skeleton",
+  "name": "crawl",
   "ignore": [
     "**/.*",
     "node_modules",
