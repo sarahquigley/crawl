@@ -9,6 +9,7 @@
   ],
   "dependencies": {
     "lodash": "~3.3.x",
-    "phaser": "~2.4.4"
+    "phaser": "~2.4.4",
+    "jquery": "~2.1.4"
   }
 }
