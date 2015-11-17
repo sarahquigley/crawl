@@ -1,9 +1,5 @@
 class Player
   constructor: (@game, @cursors) ->
-    @config =
-      bodyWidth: 42,
-      bodyHeight: 32,
-      velocity: 150 * 1.2
     @sprite = @game.add.sprite((@game.world.centerX) - 21, (@game.world.centerY) - 16, 'player')
     @game.physics.enable(@sprite, Phaser.Physics.ARCADE)
     @sprite.anchor.setTo(0.5, 0.5)
@@ -12,11 +8,16 @@ class Player
     @music = @game.add.audio('player', 0.5, true)
     @music.play()
 
+  config:
+    bodyWidth: 42,
+    bodyHeight: 32,
+    velocity: 150 * 1.2
+
   rotate: (angle) =>
     @sprite.angle = angle
     @sprite.body.setSize(@config.bodyWidth, @config.bodyHeight, @config.bodyWidth/2, @config.bodyHeight/2)
 
-  update: () =>
+  update: =>
     @sprite.body.velocity.x = 0
     @sprite.body.velocity.y = 0
     @music.pause()
@@ -40,16 +41,11 @@ class Player
     else
       @music.pause()
 
-  cleanup: () =>
+  cleanup: =>
     @game.sound.remove(@music)
 
 class Baddy
   constructor: (@game, @group) ->
-    @config =
-      bodyWidth: 26,
-      bodyHeight: 24,
-      velocity: 150 * 1.2
-
     pos = @randomStartingPosition()
     @sprite = @group.create(pos[0], pos[1], 'baddy')
     @game.physics.enable(@sprite, Phaser.Physics.ARCADE)
@@ -61,6 +57,11 @@ class Baddy
     @sprite.checkWorldBounds = true
 
     @game.physics.arcade.velocityFromAngle(@sprite.angle, @config.velocity, @sprite.body.velocity)
+
+  config:
+    bodyWidth: 26,
+    bodyHeight: 24,
+    velocity: 150 * 1.2
 
   randomStartingPosition: () =>
     if @game.rnd.integerInRange(0, 1) == 0
